@@ -1,0 +1,35 @@
+.canclebutton {
+  width: 9em;
+  height: 3em;
+  border-radius: 30em;
+  font-size: 15px;
+  font-family: inherit;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  background-color: #ffffff; /* Set background to white */
+  color: #000000;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+}
+
+.canclebutton::before {
+  content: "";
+  width: 0;
+  height: 3em;
+  border-radius: 30em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: linear-gradient(to right, #ff0000 0%, #ff00d9 100%);
+  transition: 0.2s ease;
+  display: block;
+  z-index: -1;
+}
+
+.canclebutton:hover::before {
+  width: 9em;
+}
+
+
+

@@ -1,0 +1,409 @@
+#root {
+  display: flex;
+  justify-content: center;
+  background-image: url("D:\college\6th sem\AI_Gen_Detection\frontend\public\Animated Shape.svg");
+  align-items: center;
+  background-color: #000000;
+  width: 100vw;
+  height: 100vh;
+}
+
+.glow_button {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.glow_button:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 76, 0.8);
+}
+
+.glowing-text {
+  color: #000000; /* Red color by default */
+  text-shadow: none; /* No glow initially */
+  font-size: 20px;
+  font-weight: bold;
+  transition: text-shadow 0.3s ease-in-out;
+}
+
+.glowing-text:hover {
+  text-shadow: 0 0 10px #ff0000, 0 0 15px #ff0000, 0 0 20px #ff0000;
+}
+
+.cropbutton {
+  width: 9em;
+  height: 3em;
+  border-radius: 30em;
+  font-size: 15px;
+  font-family: inherit;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  background-color: #ffffff; /* Set background to white */
+  color: #000000;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+}
+
+.cropbutton::before {
+  content: "";
+  width: 0;
+  height: 3em;
+  border-radius: 30em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: linear-gradient(to right, #0fd850 0%, #f9f047 100%);
+  transition: 0.2s ease;
+  display: block;
+  z-index: -1;
+}
+
+.cropbutton:hover::before {
+  width: 9em;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+/* App.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 80%;
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.crop-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.crop-actions button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.crop-actions button:hover {
+  background-color: #0056b3;
+}
+
+/* From Uiverse.io by ilkhoeri */
+.button {
+  --h-button: 48px;
+  --w-button: 102px;
+  --round: 0.75rem;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  background: radial-gradient(
+      65.28% 65.28% at 50% 100%,
+      rgba(223, 113, 255, 0.8) 0%,
+      rgba(223, 113, 255, 0) 100%
+    ),
+    linear-gradient(0deg, #7a5af8, #7a5af8);
+  border-radius: var(--round);
+  border: none;
+  outline: none;
+  padding: 12px 18px;
+}
+.button::before,
+.button::after {
+  content: "";
+  position: absolute;
+  inset: var(--space);
+  transition: all 0.5s ease-in-out;
+  border-radius: calc(var(--round) - var(--space));
+  z-index: 0;
+}
+.button::before {
+  --space: 1px;
+  background: linear-gradient(
+    177.95deg,
+    rgba(255, 255, 255, 0.19) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+.button::after {
+  --space: 2px;
+  background: radial-gradient(
+      65.28% 65.28% at 50% 100%,
+      rgba(223, 113, 255, 0.8) 0%,
+      rgba(223, 113, 255, 0) 100%
+    ),
+    linear-gradient(0deg, #7a5af8, #7a5af8);
+}
+.button:active {
+  transform: scale(0.95);
+}
+
+.fold {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 1rem;
+  width: 1rem;
+  display: inline-block;
+  transition: all 0.5s ease-in-out;
+  background: radial-gradient(
+    100% 75% at 55%,
+    rgba(223, 113, 255, 0.8) 0%,
+    rgba(223, 113, 255, 0) 100%
+  );
+  box-shadow: 0 0 3px black;
+  border-bottom-left-radius: 0.5rem;
+  border-top-right-radius: var(--round);
+}
+.fold::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150%;
+  height: 150%;
+  transform: rotate(45deg) translateX(0%) translateY(-18px);
+  background-color: #e8e8e8;
+  pointer-events: none;
+}
+.button:hover .fold {
+  margin-top: -1rem;
+  margin-right: -1rem;
+}
+
+.points_wrapper {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.points_wrapper .point {
+  bottom: -10px;
+  position: absolute;
+  animation: floating-points infinite ease-in-out;
+  pointer-events: none;
+  width: 2px;
+  height: 2px;
+  background-color: #fff;
+  border-radius: 9999px;
+}
+@keyframes floating-points {
+  0% {
+    transform: translateY(0);
+  }
+  85% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(-55px);
+    opacity: 0;
+  }
+}
+.points_wrapper .point:nth-child(1) {
+  left: 10%;
+  opacity: 1;
+  animation-duration: 2.35s;
+  animation-delay: 0.2s;
+}
+.points_wrapper .point:nth-child(2) {
+  left: 30%;
+  opacity: 0.7;
+  animation-duration: 2.5s;
+  animation-delay: 0.5s;
+}
+.points_wrapper .point:nth-child(3) {
+  left: 25%;
+  opacity: 0.8;
+  animation-duration: 2.2s;
+  animation-delay: 0.1s;
+}
+.points_wrapper .point:nth-child(4) {
+  left: 44%;
+  opacity: 0.6;
+  animation-duration: 2.05s;
+}
+.points_wrapper .point:nth-child(5) {
+  left: 50%;
+  opacity: 1;
+  animation-duration: 1.9s;
+}
+.points_wrapper .point:nth-child(6) {
+  left: 75%;
+  opacity: 0.5;
+  animation-duration: 1.5s;
+  animation-delay: 1.5s;
+}
+.points_wrapper .point:nth-child(7) {
+  left: 88%;
+  opacity: 0.9;
+  animation-duration: 2.2s;
+  animation-delay: 0.2s;
+}
+.points_wrapper .point:nth-child(8) {
+  left: 58%;
+  opacity: 0.8;
+  animation-duration: 2.25s;
+  animation-delay: 0.2s;
+}
+.points_wrapper .point:nth-child(9) {
+  left: 98%;
+  opacity: 0.6;
+  animation-duration: 2.6s;
+  animation-delay: 0.1s;
+}
+.points_wrapper .point:nth-child(10) {
+  left: 65%;
+  opacity: 1;
+  animation-duration: 2.5s;
+  animation-delay: 0.2s;
+}
+
+.inner {
+  z-index: 2;
+  gap: 6px;
+  position: relative;
+  width: 100%;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  transition: color 0.2s ease-in-out;
+}
+
+.inner svg.icon {
+  width: 18px;
+  height: 18px;
+  transition: fill 0.1s linear;
+}
+
+.button:focus svg.icon {
+  fill: white;
+}
+.button:hover svg.icon {
+  fill: transparent;
+  animation: dasharray 1s linear forwards, filled 0.1s linear forwards 0.95s;
+}
+@keyframes dasharray {
+  from {
+    stroke-dasharray: 0 0 0 0;
+  }
+  to {
+    stroke-dasharray: 68 68 0 0;
+  }
+}
+@keyframes filled {
+  to {
+    fill: white;
+  }
+}
+
+@media (max-width: 807px) {
+  #root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centers content vertically */
+    background-image: url("D:/college/6th sem/AI_Gen_Detection/frontend/public/Animated Shape.svg");
+    background-color: #000000;
+    width: 100vw;
+    height: 100vh;
+
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 704px) {
+  #root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centers content vertically */
+    background-image: url("D:/college/6th sem/AI_Gen_Detection/frontend/public/Animated Shape.svg");
+    background-color: #000000;
+    width: 100vw;
+    height: 100vh;
+
+    font-size: 14px;
+  }
+  .Head704px {
+    display: flex;
+    text-align: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-height: 527px) {
+  #root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centers content vertically */
+    background-image: url("D:/college/6th sem/AI_Gen_Detection/frontend/public/Animated Shape.svg");
+    background-color: #000000;
+    width: 100vw;
+    height: 100vh;
+  }
+  .Head704px {
+    display: flex;
+    text-align: center;
+    flex-wrap: wrap;
+    font-size: 33px;
+  }
+}
+
+@media (max-height: 472px) {
+  #root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centers content vertically */
+    background-image: url("D:/college/6th sem/AI_Gen_Detection/frontend/public/Animated Shape.svg");
+    background-color: #000000;
+    width: 100vw;
+    height: 100vh;
+  }
+  .Head704px {
+    display: flex;
+    text-align: center;
+    flex-wrap: wrap;
+    font-size: 33px;
+  }
+}

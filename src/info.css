@@ -1,0 +1,133 @@
+.info-container {
+  padding: 30px;
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.9),
+    rgba(20, 20, 30, 0.95)
+  );
+  border-radius: 20px;
+  height: auto;
+  min-height: 100%;
+  font-family: "Arial", sans-serif;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 60px;
+}
+
+.info-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.info-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #fff, #9cecfb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.info-header h2 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: #9cecfb;
+}
+
+.info-section {
+  margin-bottom: 30px;
+}
+
+.info-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #9cecfb;
+  position: relative;
+  padding-left: 15px;
+}
+
+.info-section h3:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 80%;
+  width: 4px;
+  background: linear-gradient(to bottom, #9cecfb, #65c7f7);
+  border-radius: 2px;
+}
+
+.info-section p {
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* Team section styling */
+.team-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.team-member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
+}
+
+.member-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #9cecfb, #65c7f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 10px rgba(156, 236, 251, 0.4);
+}
+
+.team-member p {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Copyright section */
+.copyright {
+  margin-top: 40px;
+  padding-top: 20px;
+  padding-bottom: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+/* Scrollbar styling */
+.info-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.info-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.info-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #9cecfb, #65c7f7);
+  border-radius: 10px;
+}
+
+.info-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #65c7f7, #0052d4);
+}
