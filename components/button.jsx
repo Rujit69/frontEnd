@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+"use client"
+import styled from "styled-components"
 
 const CustomButton = ({ onClick }) => {
   return (
@@ -19,21 +19,30 @@ const CustomButton = ({ onClick }) => {
           <i className="point" />
         </div>
         <span className="inner">
-          <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5">
+          <svg
+            className="icon"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.5"
+          >
             <polyline points="13.18 1.37 13.18 9.64 21.45 9.64 10.82 22.63 10.82 14.36 2.55 14.36 13.18 1.37" />
           </svg>
           Predict
         </span>
       </button>
     </StyledWrapper>
-  );
+  )
 }
 
 const StyledWrapper = styled.div`
   .button {
     --h-button: 48px;
-    --w-button: 102px;
-    --round: 0.75rem;
+    --w-button: 120px;
+    --round: 12px;
     cursor: pointer;
     position: relative;
     display: inline-flex;
@@ -50,8 +59,17 @@ const StyledWrapper = styled.div`
     border-radius: var(--round);
     border: none;
     outline: none;
-    padding: 12px 18px;
+    padding: 14px 24px;
+    box-shadow: 0 10px 20px rgba(122, 90, 248, 0.3);
+    transform: translateY(0);
+    transition: all 0.2s ease;
   }
+  
+  .button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(122, 90, 248, 0.4);
+  }
+  
   .button::before,
   .button::after {
     content: "";
@@ -65,7 +83,7 @@ const StyledWrapper = styled.div`
     --space: 1px;
     background: linear-gradient(
       177.95deg,
-      rgba(255, 255, 255, 0.19) 0%,
+      rgba(255, 255, 255, 0.25) 0%,
       rgba(255, 255, 255, 0) 100%
     );
   }
@@ -79,7 +97,8 @@ const StyledWrapper = styled.div`
       linear-gradient(0deg, #7a5af8, #7a5af8);
   }
   .button:active {
-    transform: scale(0.95);
+    transform: scale(0.97) translateY(0);
+    box-shadow: 0 5px 15px rgba(122, 90, 248, 0.2);
   }
 
   .fold {
@@ -96,7 +115,7 @@ const StyledWrapper = styled.div`
       rgba(223, 113, 255, 0.8) 0%,
       rgba(223, 113, 255, 0) 100%
     );
-    box-shadow: 0 0 3px black;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
     border-bottom-left-radius: 0.5rem;
     border-top-right-radius: var(--round);
   }
@@ -208,7 +227,7 @@ const StyledWrapper = styled.div`
 
   .inner {
     z-index: 2;
-    gap: 6px;
+    gap: 8px;
     position: relative;
     width: 100%;
     color: white;
@@ -216,9 +235,10 @@ const StyledWrapper = styled.div`
     align-items: center;
     justify-content: center;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.5;
     transition: color 0.2s ease-in-out;
+    letter-spacing: 0.5px;
   }
 
   .inner svg.icon {
@@ -249,7 +269,6 @@ const StyledWrapper = styled.div`
       fill: white;
     }
   }
-`;
+`
 
-export default CustomButton;
-
+export default CustomButton

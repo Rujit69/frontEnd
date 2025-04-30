@@ -1,7 +1,6 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import CustomButton from "../components/button.jsx";
-import Loader from "../components/loader.jsx";
 import CropButton from "../components/cropButton.jsx";
 import CropComponent from "../components/crop";
 import InfoModal from "./infoModal.jsx";
@@ -18,6 +17,16 @@ const ImageUploader = () => {
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  
+  // Reference to the result container for scrolling
+  const resultContainerRef = useRef(null);
+
+  // Scroll to result when prediction or error changes
+  useEffect(() => {
+    if ((prediction || error) && resultContainerRef.current) {
+      resultContainerRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [prediction, error]);
 
   // Convert data URL to Blob
   const dataURLtoBlob = (dataURL) => {
@@ -37,6 +46,8 @@ const ImageUploader = () => {
     setFile(file);
     setCroppedImage(null);
     setError("");
+    setPrediction("");
+    setConfidence("");
     setPreview(URL.createObjectURL(file));
   }, []);
 
@@ -48,6 +59,8 @@ const ImageUploader = () => {
         setFile(file);
         setCroppedImage(null);
         setError("");
+        setPrediction("");
+        setConfidence("");
         setPreview(URL.createObjectURL(file));
         break;
       }
@@ -56,7 +69,9 @@ const ImageUploader = () => {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: "image/*",
+    accept: {
+      "image/*": [".jpeg", ".jpg", ".png", ".gif", ".webp"],
+    },
     noClick: !!file,
     noDrag: !!file,
   });
@@ -121,298 +136,139 @@ const ImageUploader = () => {
 
   const openCropModal = () => setIsCropModalOpen(true);
   const closeCropModal = () => setIsCropModalOpen(false);
-  
+
   const openInfoModal = () => setIsInfoModalOpen(true);
   const closeInfoModal = () => setIsInfoModalOpen(false);
 
   return (
-    <div
-      id="root"
-      onPaste={onPaste}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        flexWrap: "wrap",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: "100px",
-      }}
-    >
+    <div className="app-container" onPaste={onPaste}>
       {loading && (
         <div className="overlay">
-          {/* <Loader /> */}
           <DotLottieReact
             src="https://lottie.host/5567e975-2890-461b-9f73-d25d29086e1c/XzrdaFH3SX.lottie"
             loop
             autoplay
-            style={{ width: "300px", height: "300px" }}
+            className="loading-animation"
           />
         </div>
       )}
 
       {/* Info Button */}
-      <button
-        onClick={openInfoModal}
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          backgroundColor: "rgba(255, 255, 255, 0.2)",
-          border: "2px solid rgba(255, 255, 255, 0.4)",
-          borderRadius: "50%",
-          width: "40px",
-          height: "40px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          boxShadow: "0 0 10px rgba(255, 255, 255, 0.3)",
-          fontSize: "24px",
-          color: "white",
-          fontWeight: "bold",
-          transition: "all 0.3s ease"
-        }}
-        className="info-button"
-      >
-        i
+      <button onClick={openInfoModal} className="info-button" aria-label="Information">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
       </button>
 
-      <h1 className="Head704px">AI Generated Fake Face Detection</h1>
+      <h1 className="app-title">AI Generated Fake Face Detection</h1>
 
-      <div
-        className="box"
-        style={{
-          padding: "40px",
-          fontFamily: "Arial, sans-serif",
-          width: "25%",
-          maxWidth: "1200px",
-          textAlign: "center",
-          border: "5px solid #ffffff",
-          borderRadius: "20px",
-          boxShadow: "0 0 15px 5px rgba(255, 255, 255, 0.8)",
-          backgroundColor: "#ffffff",
-          color: "#000",
-          transition: "transform 0.3s ease-in-out",
-        }}
-      >
-        <form onSubmit={handleSubmit}>
-          {!preview && (
-            <div
-              className="glow_button"
-              {...getRootProps()}
-              style={{
-                border: "2px dashed #ccc",
-                padding: "20px",
-                borderRadius: "20px",
-                cursor: "pointer",
-                position: "relative",
-              }}
-            >
-              <input {...getInputProps()} />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "100px",
-                }}
-              >
-                <div
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    borderRadius: "50%",
-                    backgroundColor: "#ccc",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    fontSize: "24px",
-                    color: "#fff",
-                  }}
-                >
-                  +
+      <div className="main-content">
+        <div className="upload-container">
+          <form onSubmit={handleSubmit}>
+            {!preview && (
+              <div {...getRootProps()} className="dropzone">
+                <input {...getInputProps()} />
+                <div className="upload-icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
                 </div>
+                <p>Drag & drop an image here, or click to select one</p>
+                <p className="upload-hint">You can also paste an image</p>
               </div>
-              <p>Drag & drop an image here, or click to select one</p>
-            </div>
-          )}
+            )}
 
-          {preview && (
-            <div
-              style={{
-                position: "relative",
-                borderRadius: "20px",
-                padding: "10px",
-              }}
-            >
-              <button
-                onClick={handleRemoveImage}
-                style={{
-                  position: "absolute",
-                  top: "-50px",
-                  right: "-50px",
-                  backgroundColor: "transparent",
-                  color: "#000",
-                  border: "none",
-                  fontSize: "20px",
-                  cursor: "pointer",
-                  lineHeight: "1",
-                }}
-              >
-                <span className="glowing-text">×</span>
-              </button>
-              <img
-                src={croppedImage || preview}
-                alt="Preview"
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "200px",
-                  borderRadius: "10px",
-                }}
-              />
-            </div>
-          )}
-        </form>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: "50px",
-        }}
-      >
-        {(preview || croppedImage) && ( // This ensures buttons appear only if an image is uploaded
-          <>
-            <CustomButton onClick={handleSubmit} />
-            <div style={{ padding: "20px" }}>
-              <CropButton onClick={openCropModal} />
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "absolute",
-          fontSize: "9.5em",
-          color: prediction === "real" ? "green" : "red", // Conditional color based on prediction
-          fontFamily: "Georgia, serif", // Change this to any font you prefer
-        }}
-      >
-        {prediction}
-      </div> */}
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: "600px",
-          position: "absolute",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            color: "red",
-            marginTop: "20px",
-            flexDirection: "row",
-            alignContent: "center",
-          }}
-        >
-          {error && (
-            <div
-              style={{
-                color: "red",
-                marginTop: "20px",
-                flexDirection: "row",
-                alignContent: "center",
-                alignItems: "center",
-                display: "flex",
-              }}
-            >
-              <strong> </strong> server offline failed to fetch result
-              <DotLottieReact
-                src="https://lottie.host/4292a27c-d1a4-471e-99ba-343c124f275d/GGXqKHecIM.lottie"
-                loop
-                autoplay
-                style={{ width: "100px", height: "100px" }}
-              />
-            </div>
-          )}
-
-          {prediction && prediction !== "Error" && (
-            <div style={{ marginTop: "30px" }}>
-              <h3 style={{ fontSize: "1.5em", color: "#ffffff" }}>
-                The uploaded image is {prediction} with Confidence of{" "}
-                {confidence}
-              </h3>
-            </div>
-          )}
+            {preview && (
+              <div className="preview-container">
+                <button onClick={handleRemoveImage} className="remove-image-button" aria-label="Remove image">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+                <img src={croppedImage || preview} alt="Preview" className="image-preview" />
+              </div>
+            )}
+          </form>
         </div>
+
+        {(preview || croppedImage) && (
+          <div className="action-buttons">
+            <CustomButton onClick={handleSubmit} />
+            <CropButton onClick={openCropModal} />
+          </div>
+        )}
+
+        {(prediction || error) && (
+          <div className="result-container" ref={resultContainerRef}>
+            {error && (
+              <div className="error-message">
+                <span>Server offline - failed to fetch result</span>
+                <DotLottieReact
+                  src="https://lottie.host/4292a27c-d1a4-471e-99ba-343c124f275d/GGXqKHecIM.lottie"
+                  loop
+                  autoplay
+                  className="error-animation"
+                />
+              </div>
+            )}
+
+            {prediction && prediction !== "Error" && (
+              <div className={`prediction-result ${prediction.toLowerCase()}`}>
+                <h3>
+                  The uploaded image is <span className="prediction-text">{prediction}</span>
+                  <br />
+                  <span className="confidence-text">Confidence: {confidence}</span>
+                </h3>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {isCropModalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <CropComponent
-              imageSrc={preview}
-              setCroppedImage={setCroppedImage}
-              closeModal={closeCropModal}
-            />
+          <div className="modal-content crop-modal" onClick={(e) => e.stopPropagation()}>
+            <CropComponent imageSrc={preview} setCroppedImage={setCroppedImage} closeModal={closeCropModal} />
           </div>
         </div>
       )}
 
-      {/* Info Modal */}
       <InfoModal isOpen={isInfoModalOpen} onClose={closeInfoModal} />
-
-      {/* Add some CSS to extend the existing styles */}
-      <style jsx>{`
-        .info-button:hover {
-          background-color: rgba(255, 255, 255, 0.4);
-          transform: scale(1.1);
-          box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-        }
-        
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: rgba(0, 0, 0, 0.75);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          backdrop-filter: blur(5px);
-        }
-        
-        .modal-content {
-          background-color: white;
-          border-radius: 20px;
-          overflow: hidden;
-          position: relative;
-        }
-        
-        .modal-close-button:hover {
-          background-color: rgba(0, 0, 0, 0.8);
-          transform: scale(1.1);
-        }
-      `}</style>
     </div>
   );
 };
