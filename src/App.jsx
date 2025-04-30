@@ -172,7 +172,7 @@ const ImageUploader = () => {
         </svg>
       </button>
 
-      <h1 className="app-title">AI Generated Fake Face Detection</h1>
+      <h1 className="app-title">AI Generated Face Detection</h1>
 
       <div className="main-content">
         <div className="upload-container">
@@ -198,7 +198,7 @@ const ImageUploader = () => {
                   </svg>
                 </div>
                 <p>Drag & drop an image here, or click to select one</p>
-                <p className="upload-hint">You can also paste an image</p>
+               
               </div>
             )}
 

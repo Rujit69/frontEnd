@@ -197,6 +197,9 @@
 
   .team-members {
     gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
   }
 
   .team-member {
@@ -216,32 +219,70 @@
   }
 
   .info-header h1 {
-    font-size: 1.75rem;
+    font-size: 1.8rem;
   }
 
   .info-header h2 {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .info-section h3 {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
   }
 
   .team-members {
-    gap: 10px;
+    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 10px;
   }
 
   .team-member {
-    width: 100px;
+    width: 100%;
+    max-width: 160px;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px 10px;
+    margin: 0;
   }
 
   .member-avatar {
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     font-size: 1rem;
+    margin-bottom: 12px;
   }
 
   .team-member p {
     font-size: 0.9rem;
+    text-align: center;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 320px) {
+  .info-container {
+    padding: 12px;
+  }
+
+  .team-members {
+    gap: 12px;
+    padding: 5px;
+  }
+
+  .team-member {
+    padding: 10px 8px;
+    max-width: 140px;
+  }
+
+  .member-avatar {
+    width: 45px;
+    height: 45px;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+
+  .team-member p {
+    font-size: 0.8rem;
   }
 }

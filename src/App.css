@@ -185,11 +185,12 @@ body {
 /* Action buttons */
 .action-buttons {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
-  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 /* Info button */
@@ -359,8 +360,7 @@ body {
   }
 
   .action-buttons {
-    flex-direction: column;
-    align-items: center;
+    gap: 0.75rem;
   }
 }
 
@@ -388,9 +388,9 @@ body {
 
 @media (max-width: 480px) {
   .app-title {
-    font-size: 1.3rem; /* Smaller font size on very small screens */
-    padding: 0 30px; /* Smaller padding */
-    margin-top: 30px; /* Smaller top margin */
+    font-size: 1.3rem;
+    padding: 0 30px;
+    margin-top: 30px;
   }
 
   .info-button {
@@ -401,6 +401,10 @@ body {
   }
 
   .app-container {
-    padding: 0.75rem; /* Smaller padding on very small screens */
+    padding: 0.75rem;
+  }
+
+  .action-buttons {
+    gap: 0.5rem;
   }
 }
