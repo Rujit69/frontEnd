@@ -233,16 +233,16 @@
   .team-members {
     gap: 20px;
     grid-template-columns: repeat(2, 1fr);
-    padding: 10px;
+    padding: 0;
   }
 
   .team-member {
     width: 100%;
     max-width: 160px;
     flex-direction: column;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 15px 10px;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
     margin: 0;
   }
 
@@ -267,12 +267,13 @@
 
   .team-members {
     gap: 12px;
-    padding: 5px;
+    padding: 0;
   }
 
   .team-member {
-    padding: 10px 8px;
+    padding: 0;
     max-width: 140px;
+    background: transparent;
   }
 
   .member-avatar {
