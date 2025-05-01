@@ -34,6 +34,36 @@ body {
   font-family: var(--font-primary);
 }
 
+@keyframes edgeCircleGradient1 {
+  0%, 100% {
+    background-position: 0% 100%;
+  }
+  25% {
+    background-position: 100% 100%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  75% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes edgeCircleGradient2 {
+  0%, 100% {
+    background-position: 100% 0%;
+  }
+  25% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 0% 100%;
+  }
+  75% {
+    background-position: 100% 100%;
+  }
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
@@ -42,21 +72,31 @@ body {
   width: 100%;
   min-height: 100vh;
   background-color: #0f0f1a;
-  background: radial-gradient(
-      circle at top right,
-      rgba(122, 90, 248, 0.2),
-      transparent 70%
-    ),
-    radial-gradient(
-      circle at bottom left,
-      rgba(223, 113, 255, 0.2),
-      transparent 70%
-    );
+  background-size: 200% 200%;
+  background-image: 
+    radial-gradient(circle at 0% 100%, rgba(122, 90, 248, 0.35) 0%, transparent 50%),
+    radial-gradient(circle at 100% 0%, rgba(223, 113, 255, 0.35) 0%, transparent 50%);
+  animation: edgeCircleGradient1 15s infinite ease-in-out;
   padding: 2rem;
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
   box-sizing: border-box;
+}
+
+.app-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: 200% 200%;
+  background-image: radial-gradient(circle at 0% 0%, rgba(223, 113, 255, 0.35) 0%, transparent 50%);
+  animation: edgeCircleGradient2 15s infinite ease-in-out;
+  animation-delay: -7.5s;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Typography */
