@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useDropzone } from "react-dropzone";
+import { Client } from "@gradio/client";
 import CustomButton from "../components/button.jsx";
 import CropButton from "../components/cropButton.jsx";
 import CropComponent from "../components/crop";
@@ -17,14 +18,17 @@ const ImageUploader = () => {
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  
+
   // Reference to the result container for scrolling
   const resultContainerRef = useRef(null);
 
   // Scroll to result when prediction or error changes
   useEffect(() => {
     if ((prediction || error) && resultContainerRef.current) {
-      resultContainerRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      resultContainerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
     }
   }, [prediction, error]);
 
@@ -92,43 +96,52 @@ const ImageUploader = () => {
       return;
     }
 
-    const formData = new FormData();
-
-    if (croppedImage) {
-      const blob = dataURLtoBlob(croppedImage);
-      const croppedFile = new File([blob], "cropped-image.jpg", {
-        type: "image/jpeg",
-      });
-      formData.append("image", croppedFile);
-    } else {
-      formData.append("image", file);
-    }
-
     try {
       setLoading(true);
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/predict`, {
-        method: "POST",
-        body: formData,
+
+      // Prepare the image blob
+      let imageBlob;
+      if (croppedImage) {
+        imageBlob = dataURLtoBlob(croppedImage);
+      } else {
+        imageBlob = file;
+      }
+
+      // Connect to Hugging Face space and make prediction
+      const client = await Client.connect("Rujit/ai_generated_face_detection");
+      const result = await client.predict("/predict", {
+        image: imageBlob,
       });
 
-      if (!response.ok) {
-        throw new Error(`Prediction failed: ${response.statusText}`);
+      console.log("fuck you");
+
+      // Parse the result - result.data should contain the prediction string
+      if (result && result.data && result.data.length > 0) {
+        const predictionString = result.data[0]; // e.g., "fake (85.23%)" or "real (92.45%)"
+
+        // Extract label and confidence
+        const match = predictionString.match(/^(\w+)\s*\(([^)]+)\)$/);
+        if (match) {
+          const label = match[1].trim();
+          const confidenceValue = match[2].trim();
+
+          setPrediction(label);
+          setConfidence(confidenceValue);
+          setError("");
+        } else {
+          // Fallback if format doesn't match expected pattern
+          setPrediction(predictionString);
+          setConfidence("N/A");
+          setError("");
+        }
+      } else {
+        throw new Error("No prediction data received");
       }
-
-      const data = await response.json();
-
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      setPrediction(data.prediction);
-      setConfidence(data.confidence);
-      setError("");
     } catch (error) {
       console.error("Error:", error.message);
       setPrediction("Error");
       setConfidence("0%");
-      setError(error.message);
+      setError(error.message || "Failed to get prediction");
     } finally {
       setLoading(false);
     }
@@ -154,7 +167,11 @@ const ImageUploader = () => {
       )}
 
       {/* Info Button */}
-      <button onClick={openInfoModal} className="info-button" aria-label="Information">
+      <button
+        onClick={openInfoModal}
+        className="info-button"
+        aria-label="Information"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -198,13 +215,16 @@ const ImageUploader = () => {
                   </svg>
                 </div>
                 <p>Drag & drop an image here, or click to select one</p>
-               
               </div>
             )}
 
             {preview && (
               <div className="preview-container">
-                <button onClick={handleRemoveImage} className="remove-image-button" aria-label="Remove image">
+                <button
+                  onClick={handleRemoveImage}
+                  className="remove-image-button"
+                  aria-label="Remove image"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -220,7 +240,11 @@ const ImageUploader = () => {
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                   </svg>
                 </button>
-                <img src={croppedImage || preview} alt="Preview" className="image-preview" />
+                <img
+                  src={croppedImage || preview}
+                  alt="Preview"
+                  className="image-preview"
+                />
               </div>
             )}
           </form>
@@ -237,7 +261,7 @@ const ImageUploader = () => {
           <div className="result-container" ref={resultContainerRef}>
             {error && (
               <div className="error-message">
-                <span>Server offline - failed to fetch result</span>
+                <span>Failed to get prediction: {error}</span>
                 <DotLottieReact
                   src="https://lottie.host/4292a27c-d1a4-471e-99ba-343c124f275d/GGXqKHecIM.lottie"
                   loop
@@ -250,9 +274,12 @@ const ImageUploader = () => {
             {prediction && prediction !== "Error" && (
               <div className={`prediction-result ${prediction.toLowerCase()}`}>
                 <h3>
-                  The uploaded image is <span className="prediction-text">{prediction}</span>
+                  The uploaded image is{" "}
+                  <span className="prediction-text">{prediction}</span>
                   <br />
-                  <span className="confidence-text">Confidence: {confidence}</span>
+                  <span className="confidence-text">
+                    Confidence: {confidence}
+                  </span>
                 </h3>
               </div>
             )}
@@ -262,8 +289,15 @@ const ImageUploader = () => {
 
       {isCropModalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content crop-modal" onClick={(e) => e.stopPropagation()}>
-            <CropComponent imageSrc={preview} setCroppedImage={setCroppedImage} closeModal={closeCropModal} />
+          <div
+            className="modal-content crop-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CropComponent
+              imageSrc={preview}
+              setCroppedImage={setCroppedImage}
+              closeModal={closeCropModal}
+            />
           </div>
         </div>
       )}
